@@ -527,14 +527,29 @@ const app = {
             const j = Math.floor(Math.random() * (i + 1));
             [arr[i], arr[j]] = [arr[j], arr[i]];
         }
-        // Ensure no consecutive songs by the same artist
-        for (let i = 1; i < arr.length; i++) {
-            if (arr[i].artist === arr[i - 1].artist) {
-                // Find the next song with a different artist and swap
-                for (let j = i + 1; j < arr.length; j++) {
-                    if (arr[j].artist !== arr[i - 1].artist) {
-                        [arr[i], arr[j]] = [arr[j], arr[i]];
-                        break;
+        // Check if two artists are related (exact match or one contains the other)
+        const sameArtist = (a, b) => {
+            if (a === b) return true;
+            const na = a.replace(/\s+/g, ' ').trim();
+            const nb = b.replace(/\s+/g, ' ').trim();
+            // Check if first word (main artist name) matches
+            const firstA = na.split(' ').slice(0, 2).join(' ');
+            const firstB = nb.split(' ').slice(0, 2).join(' ');
+            if (firstA === firstB) return true;
+            // Check containment
+            if (na.includes(nb) || nb.includes(na)) return true;
+            return false;
+        };
+        // Ensure no consecutive songs by the same/related artist (multiple passes)
+        for (let pass = 0; pass < 3; pass++) {
+            for (let i = 1; i < arr.length; i++) {
+                if (sameArtist(arr[i].artist, arr[i - 1].artist)) {
+                    for (let j = i + 1; j < arr.length; j++) {
+                        if (!sameArtist(arr[j].artist, arr[i - 1].artist) &&
+                            (i + 1 >= arr.length || !sameArtist(arr[j].artist, arr[i + 1]?.artist))) {
+                            [arr[i], arr[j]] = [arr[j], arr[i]];
+                            break;
+                        }
                     }
                 }
             }
