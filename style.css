@@ -1,0 +1,1005 @@
+/* === Base Reset & Theme === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #22223a;
+    --bg-card: #2a2a45;
+    --bg-hover: #33335a;
+    --accent: #e94560;
+    --accent-light: #ff6b81;
+    --gold: #f5c518;
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --text-primary: #f0eef5;
+    --text-secondary: #b0a8c8;
+    --text-muted: #706888;
+    --border: #3a3a5a;
+    --shadow: rgba(0, 0, 0, 0.4);
+    --radius: 12px;
+    --radius-sm: 8px;
+}
+
+body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    direction: rtl;
+    overflow-x: hidden;
+    position: relative;
+}
+
+
+/* === Screens === */
+.screen {
+    display: none;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+.screen.active {
+    display: flex;
+}
+
+/* === Buttons === */
+.btn {
+    font-family: 'Heebo', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.1);
+}
+.btn:active {
+    transform: translateY(0);
+}
+.btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-add {
+    background: var(--accent);
+    color: white;
+    padding: 10px 24px;
+}
+/* Cards to win setting */
+.cards-to-win-setting {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 16px 0;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+.cards-to-win-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.cards-to-win-value {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--gold);
+    min-width: 40px;
+    text-align: center;
+}
+.btn-small {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-small:hover {
+    background: var(--gold);
+    color: var(--bg-primary);
+}
+
+.btn-start {
+    background: linear-gradient(135deg, var(--accent), #c0392b);
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 700;
+    padding: 16px 48px;
+    border-radius: var(--radius);
+    letter-spacing: 0.5px;
+}
+.btn-correct {
+    background: var(--green);
+    color: white;
+    font-size: 1.1rem;
+    padding: 12px 32px;
+}
+.btn-wrong {
+    background: var(--red);
+    color: white;
+    font-size: 1.1rem;
+    padding: 12px 32px;
+}
+.btn-token {
+    background: var(--gold);
+    color: #1a1a2e;
+    font-weight: 700;
+}
+.btn-reveal {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+.btn-token-action {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+}
+.btn-token-action:disabled {
+    opacity: 0.3;
+}
+.btn-next {
+    background: var(--accent);
+    color: white;
+    font-size: 1.1rem;
+    padding: 12px 36px;
+}
+
+/* === Setup Screen === */
+#setup-screen {
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+}
+
+.setup-container {
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+}
+
+.game-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent-light), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+
+.game-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+}
+
+.player-input-section {
+    margin-bottom: 32px;
+}
+
+.input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.input-row input {
+    flex: 1;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: 'Heebo', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.input-row input:focus {
+    border-color: var(--accent);
+}
+.input-row input::placeholder {
+    color: var(--text-muted);
+}
+
+.player-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.player-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    border-right: 4px solid;
+    animation: slideIn 0.2s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.player-item .player-item-name {
+    font-weight: 500;
+    font-size: 1.05rem;
+}
+
+.player-item .remove-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+.player-item .remove-btn:hover {
+    color: var(--red);
+    background: rgba(231, 76, 60, 0.15);
+}
+
+.player-count-hint {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Player colors */
+.player-color-0 { border-color: #e94560; }
+.player-color-1 { border-color: #3498db; }
+.player-color-2 { border-color: #2ecc71; }
+.player-color-3 { border-color: #f39c12; }
+.player-color-4 { border-color: #9b59b6; }
+.player-color-5 { border-color: #1abc9c; }
+.player-color-6 { border-color: #e67e22; }
+.player-color-7 { border-color: #e84393; }
+.player-color-8 { border-color: #00cec9; }
+.player-color-9 { border-color: #fd79a8; }
+
+/* === Game Screen === */
+#game-screen {
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    font-size: 1.05rem;
+}
+.top-bar .highlight-name {
+    color: var(--accent-light);
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+.cards-to-win {
+    color: var(--gold);
+    font-weight: 500;
+}
+
+.game-main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* Scoreboard Panel */
+.scoreboard-panel {
+    width: 220px;
+    min-width: 220px;
+    padding: 20px;
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--border);
+    overflow-y: auto;
+}
+.scoreboard-panel h3 {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.score-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-card);
+    font-size: 1rem;
+    transition: all 0.2s;
+    border-right: 4px solid transparent;
+}
+.score-item.active-player {
+    background: var(--bg-hover);
+    border-right-color: var(--accent);
+}
+
+.score-item .score-name {
+    flex: 1;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.score-item .score-cards {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 1.3rem;
+    min-width: 30px;
+    text-align: center;
+}
+.score-item .score-tokens {
+    color: var(--text-muted);
+    font-size: 1rem;
+    min-width: 36px;
+    text-align: center;
+}
+
+/* Play Area */
+.play-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 24px;
+    gap: 10px;
+    overflow: hidden;
+}
+
+/* Spotify Section */
+.spotify-section {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    flex-shrink: 0;
+}
+
+.spotify-wrapper {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #282828;
+    min-height: 120px;
+}
+
+.spotify-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-card));
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+.spotify-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+.btn-play-overlay {
+    background: var(--green);
+    color: white;
+    font-size: 2.2rem;
+    font-weight: 700;
+    padding: 20px 50px;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: 'Heebo', sans-serif;
+    transition: all 0.2s;
+}
+.btn-play-overlay:hover {
+    filter: brightness(1.15);
+    transform: translateY(-2px);
+}
+.btn-reveal-overlay {
+    background: var(--bg-hover);
+    color: var(--text-secondary);
+    font-size: 1.7rem;
+    padding: 18px 32px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: 'Heebo', sans-serif;
+    transition: all 0.2s;
+}
+.btn-reveal-overlay:hover {
+    color: var(--text-primary);
+    border-color: var(--accent);
+}
+
+/* Song Info (shown on reveal) */
+.song-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 12px 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-sm);
+    margin-top: 8px;
+}
+.song-info.hidden {
+    display: none;
+}
+.song-info-year {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--gold);
+}
+.song-info-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.song-info-artist {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+/* Timeline Section */
+.timeline-section {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+.timeline-section h3 {
+    margin-bottom: 6px;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.timeline-container {
+    position: relative;
+    flex: 1;
+    padding: 10px 10px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    min-height: 0;
+}
+
+.timeline-line {
+    display: none;
+}
+
+.timeline-cards {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: center;
+    justify-content: center;
+    gap: 6px;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+    padding: 0 4px;
+    direction: rtl;
+}
+
+/* Real playing card style */
+.timeline-card {
+    flex-shrink: 0;
+    width: 180px;
+    height: 240px;
+    text-align: center;
+    animation: cardAppear 0.4s ease;
+    direction: rtl;
+    position: relative;
+    perspective: 600px;
+}
+
+/* 3D Flip Card */
+.flip-card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d;
+}
+.flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+}
+.flip-card-front,
+.flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 12px;
+    border: 2px solid var(--gold);
+    box-shadow: 0 4px 16px var(--shadow), inset 0 1px 0 rgba(255, 215, 0, 0.15);
+    overflow: hidden;
+}
+.flip-card-front {
+    background: linear-gradient(145deg, #1e1e3a, #16162b);
+}
+.flip-card-front::before {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 9px;
+    pointer-events: none;
+}
+.flip-card-back {
+    transform: rotateY(180deg);
+    background-size: cover;
+    background-position: center;
+    background-color: #1a1a2e;
+}
+.flip-back-overlay {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 12px 8px;
+    direction: rtl;
+}
+.flip-back-artist {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+}
+.flip-back-title {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    margin-top: 2px;
+}
+.flip-back-year {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    margin-top: 4px;
+}
+
+.card-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 6px 8px;
+    position: relative;
+}
+
+.card-corner {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gold);
+    opacity: 0.7;
+    line-height: 1;
+}
+.card-corner-top {
+    text-align: left;
+}
+.card-corner-bottom {
+    text-align: right;
+    transform: rotate(180deg);
+}
+
+.card-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+}
+
+.card-icon {
+    font-size: 2rem;
+    color: var(--gold);
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+    margin-bottom: 2px;
+}
+
+@keyframes cardAppear {
+    from { opacity: 0; transform: scale(0.7) rotateY(20deg); }
+    to { opacity: 1; transform: scale(1) rotateY(0deg); }
+}
+
+.timeline-card .card-year {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 10px rgba(240, 208, 112, 0.2);
+    margin-bottom: 2px;
+}
+.timeline-card .card-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 155px;
+}
+.timeline-card .card-artist {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 155px;
+}
+
+/* Placement slots */
+.placement-slot {
+    flex-shrink: 0;
+    width: 105px;
+    height: 240px;
+    border: 2px dashed var(--gold);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: rgba(245, 197, 24, 0.05);
+}
+.placement-slot:hover {
+    background: rgba(245, 197, 24, 0.15);
+    border-color: var(--accent-light);
+    transform: scale(1.03);
+}
+.placement-slot.selected {
+    background: rgba(245, 197, 24, 0.2);
+    border-color: var(--gold);
+    border-style: solid;
+    box-shadow: 0 0 12px rgba(245, 197, 24, 0.3);
+}
+.placement-slot .slot-label {
+    color: var(--gold);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    direction: ltr;
+}
+
+.placement-hint {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-top: 4px;
+    flex-shrink: 0;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+.reveal-action {
+    display: flex;
+    justify-content: center;
+}
+.reveal-action .btn-reveal-overlay {
+    font-size: 1.2rem;
+    padding: 10px 28px;
+}
+.primary-actions {
+    display: flex;
+    gap: 12px;
+}
+.secondary-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.next-turn-row {
+    display: flex;
+    justify-content: center;
+}
+
+/* === Winner Overlay === */
+.winner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(10, 10, 25, 0.35);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    text-align: center;
+    animation: overlayFadeIn 0.5s ease;
+}
+.winner-overlay.hidden {
+    display: none;
+}
+@keyframes overlayFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.winner-container {
+    position: relative;
+    background: linear-gradient(145deg, rgba(30, 30, 58, 0.95), rgba(22, 22, 43, 0.95));
+    border: 2px solid var(--gold);
+    border-radius: 20px;
+    padding: 40px 50px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(245, 197, 24, 0.15);
+    max-width: 500px;
+    width: 90%;
+}
+
+.winner-title {
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: var(--gold);
+    margin-bottom: 16px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.winner-name {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--accent-light);
+    margin-bottom: 8px;
+}
+
+.winner-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 32px;
+}
+
+.final-scoreboard {
+    max-width: 400px;
+    margin: 0 auto 32px;
+    text-align: right;
+}
+
+.final-score-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    margin-bottom: 6px;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    border-right: 4px solid transparent;
+}
+.final-score-item.winner {
+    background: rgba(245, 197, 24, 0.15);
+    border-right-color: var(--gold);
+}
+.final-score-item .final-rank {
+    min-width: 30px;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+.final-score-item .final-name {
+    flex: 1;
+    font-weight: 500;
+}
+.final-score-item .final-cards {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+/* Confetti */
+.confetti {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 100;
+}
+.confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: -10px;
+    animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+    to {
+        top: 110vh;
+        transform: rotate(720deg);
+    }
+}
+
+/* === Game Animations === */
+
+/* Correct answer - green glow pulse on timeline */
+@keyframes correctFlash {
+    0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.6); }
+    40% { box-shadow: 0 0 30px 10px rgba(46, 204, 113, 0.4); }
+    100% { box-shadow: none; }
+}
+.timeline-container.anim-correct {
+    animation: correctFlash 0.8s ease-out;
+}
+
+/* Wrong answer - red shake */
+@keyframes wrongShake {
+    0%, 100% { transform: translateX(0); }
+    15% { transform: translateX(-12px); }
+    30% { transform: translateX(10px); }
+    45% { transform: translateX(-8px); }
+    60% { transform: translateX(6px); }
+    75% { transform: translateX(-3px); }
+}
+@keyframes wrongFlash {
+    0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.6); }
+    40% { box-shadow: 0 0 30px 10px rgba(231, 76, 60, 0.4); }
+    100% { box-shadow: none; }
+}
+.timeline-container.anim-wrong {
+    animation: wrongShake 0.5s ease-out, wrongFlash 0.8s ease-out;
+}
+
+/* Token earned - coin bounce */
+@keyframes tokenEarned {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.4) rotate(-10deg); }
+    50% { transform: scale(1.2) rotate(5deg); }
+    70% { transform: scale(1.3) rotate(-3deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+.score-item.anim-token .score-tokens {
+    animation: tokenEarned 0.6s ease;
+    color: var(--gold) !important;
+}
+
+/* Score update - card count pop */
+@keyframes scorePop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.6); color: var(--green); }
+    100% { transform: scale(1); }
+}
+.score-item.anim-score .score-cards {
+    animation: scorePop 0.5s ease;
+}
+
+/* Turn change - player name entrance */
+@keyframes playerNameSlide {
+    0% { opacity: 0; transform: translateY(-15px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+.highlight-name.anim-turn {
+    animation: playerNameSlide 0.4s ease-out;
+}
+
+/* Slot selected - glow pulse */
+@keyframes slotPulse {
+    0%, 100% { box-shadow: 0 0 12px rgba(245, 197, 24, 0.3); }
+    50% { box-shadow: 0 0 24px rgba(245, 197, 24, 0.6); }
+}
+.placement-slot.selected {
+    animation: slotPulse 1.5s ease-in-out infinite;
+}
+
+/* Song reveal - info bar slide in */
+@keyframes infoSlideIn {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+.song-info:not(.hidden) {
+    animation: infoSlideIn 0.4s ease-out;
+}
+
+/* Skip song - card flip out */
+@keyframes skipFlip {
+    0% { transform: perspective(400px) rotateY(0); opacity: 1; }
+    100% { transform: perspective(400px) rotateY(90deg); opacity: 0; }
+}
+.spotify-wrapper.anim-skip {
+    animation: skipFlip 0.4s ease-in;
+}
+
+/* Spotify overlay play button pulse */
+@keyframes playPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4); }
+    50% { box-shadow: 0 0 20px 8px rgba(46, 204, 113, 0.2); }
+}
+.btn-play-overlay {
+    animation: playPulse 2s ease-in-out infinite;
+}
+
+/* Placement hint message animation */
+@keyframes hintFade {
+    0% { opacity: 0; transform: translateY(5px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+.placement-hint.anim-hint {
+    animation: hintFade 0.3s ease-out;
+}
+
+/* Round counter bump */
+@keyframes roundBump {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); color: var(--gold); }
+    100% { transform: scale(1); }
+}
+.round-info.anim-round {
+    animation: roundBump 0.5s ease;
+}
+
+/* === Responsive === */
+@media (max-width: 900px) {
+    .game-main {
+        flex-direction: column;
+    }
+    .scoreboard-panel {
+        width: 100%;
+        min-width: unset;
+        border-left: none;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px;
+    }
+    .scoreboard-panel h3 {
+        width: 100%;
+        margin-bottom: 4px;
+    }
+    .score-item {
+        margin-bottom: 0;
+    }
+}

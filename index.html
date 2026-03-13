@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hitster - היטסטר ישראלי</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Setup Screen -->
+    <div id="setup-screen" class="screen active">
+        <div class="setup-container">
+            <h1 class="game-title">🎵 היטסטר 🇮🇱</h1>
+            <p class="game-subtitle">משחק ציר הזמן המוזיקלי הישראלי</p>
+
+            <div class="player-input-section">
+                <div class="input-row">
+                    <input type="text" id="player-name-input" placeholder="שם השחקן..." maxlength="20" autocomplete="off">
+                    <button id="add-player-btn" class="btn btn-add">+ הוסף</button>
+                </div>
+                <div id="player-list" class="player-list"></div>
+                <p class="player-count-hint" id="player-count-hint">הוסיפו 2-10 שחקנים כדי להתחיל</p>
+            </div>
+
+            <div class="cards-to-win-setting">
+                <label for="cards-to-win-input">🏆 מספר קלפים לניצחון:</label>
+                <div class="cards-to-win-control">
+                    <button class="btn btn-small" onclick="app.adjustCardsToWin(-1)">−</button>
+                    <span id="cards-to-win-value" class="cards-to-win-value">5</span>
+                    <button class="btn btn-small" onclick="app.adjustCardsToWin(1)">+</button>
+                </div>
+            </div>
+
+            <button id="start-game-btn" class="btn btn-start" disabled>🎶 התחילו לשחק!</button>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="round-info">סיבוב <span id="round-number">1</span></div>
+            <div class="current-player-label">תור של: <span id="current-player-name" class="highlight-name"></span></div>
+            <div class="cards-to-win">🏆 יעד: <span id="cards-to-win-display">5</span> קלפים</div>
+        </div>
+
+        <!-- Main Game Area -->
+        <div class="game-main">
+            <!-- Left: Scoreboard -->
+            <div class="scoreboard-panel">
+                <h3>🏅 טבלת ניקוד</h3>
+                <div id="scoreboard"></div>
+            </div>
+
+            <!-- Center: Game Play Area -->
+            <div class="play-area">
+                <!-- Spotify Player with Overlay -->
+                <div class="spotify-section">
+                    <div class="spotify-wrapper" id="spotify-wrapper">
+                        <div id="spotify-embed"></div>
+                        <div class="spotify-overlay" id="spotify-overlay">
+                            <button class="btn btn-play-overlay" onclick="app.playFromOverlay()">▶ נגן שיר</button>
+                        </div>
+                    </div>
+                    <div class="song-info hidden" id="song-info"></div>
+                </div>
+
+                <!-- Timeline -->
+                <div class="timeline-section">
+                    <h3 id="timeline-title">ציר הזמן של <span id="timeline-player-name"></span></h3>
+                    <div class="timeline-container" id="timeline-container">
+                        <div class="timeline-line"></div>
+                        <div class="timeline-cards" id="timeline-cards"></div>
+                    </div>
+                    <div class="placement-hint" id="placement-hint">בחרו מיקום על ציר הזמן למקם את הקלף</div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons" id="action-buttons">
+                    <div class="reveal-action">
+                        <button class="btn btn-reveal-overlay" onclick="app.toggleOverlay()">👁️ חשוף שם השיר</button>
+                    </div>
+                    <div class="primary-actions">
+                        <button class="btn btn-correct" onclick="app.markCorrect()">✅ נכון!</button>
+                        <button class="btn btn-wrong" onclick="app.markWrong()">❌ לא נכון</button>
+                    </div>
+                    <div class="secondary-actions">
+                        <button class="btn btn-token" onclick="app.earnToken()" id="earn-token-btn">🎤 מכיר את השיר (+1 טוקן)</button>
+                        <button class="btn btn-token-action" onclick="app.skipSong()" id="skip-btn">⏭️ דלג (1 טוקן)</button>
+                        <button class="btn btn-token-action" onclick="app.tradeTokens()" id="trade-btn">🔄 החלף 3 טוקנים בקלף חינם</button>
+                    </div>
+                    <div class="next-turn-row">
+                        <button class="btn btn-next" onclick="app.nextTurn()">➡️ תור הבא</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Winner Overlay (floats on top of game screen) -->
+    <div id="winner-overlay" class="winner-overlay hidden">
+        <div class="winner-container">
+            <div class="confetti" id="confetti"></div>
+            <h1 class="winner-title">🏆 יש לנו מנצח! 🏆</h1>
+            <div class="winner-name" id="winner-name"></div>
+            <div class="winner-subtitle">היטסטר הרשמי של הערב!</div>
+
+            <div class="final-scoreboard" id="final-scoreboard"></div>
+
+            <button class="btn btn-start" onclick="app.resetGame()">🔄 שחקו שוב</button>
+        </div>
+    </div>
+
+    <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+    <script src="songs.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
