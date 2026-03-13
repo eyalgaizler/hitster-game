@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head><title>Spotify Auth</title></head>
+<body>
+<script>
+// Handle Spotify OAuth PKCE callback
+const params = new URLSearchParams(window.location.search);
+const code = params.get('code');
+const error = params.get('error');
+
+if (error) {
+    localStorage.setItem('spotify_auth_error', error);
+    window.location.href = './';
+} else if (code) {
+    // Exchange code for token
+    const codeVerifier = localStorage.getItem('spotify_code_verifier');
+    const clientId = 'afc1f2a521c341bcb86aff6435a3d5ad';
+    const redirectUri = window.location.origin + window.location.pathname;
+
+    fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+            grant_type: 'authorization_code',
+            code: code,
+            redirect_uri: redirectUri,
+            client_id: clientId,
+            code_verifier: codeVerifier
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.access_token) {
+            localStorage.setItem('spotify_access_token', data.access_token);
+            localStorage.setItem('spotify_refresh_token', data.refresh_token || '');
+            localStorage.setItem('spotify_token_expires', Date.now() + (data.expires_in * 1000));
+        } else {
+            localStorage.setItem('spotify_auth_error', data.error || 'token_exchange_failed');
+        }
+        window.location.href = './';
+    })
+    .catch(err => {
+        localStorage.setItem('spotify_auth_error', 'network_error');
+        window.location.href = './';
+    });
+} else {
+    window.location.href = './';
+}
+</script>
+<p style="color:white;text-align:center;margin-top:40vh;font-family:sans-serif;">מתחבר ל-Spotify...</p>
+</body>
+</html>
