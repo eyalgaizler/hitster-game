@@ -507,7 +507,7 @@ body {
 
 .timeline-cards {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap-reverse;
     align-items: flex-start;
     align-content: center;
     justify-content: center;
