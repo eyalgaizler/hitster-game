@@ -1053,7 +1053,7 @@ body {
 }
 
 /* Mobile phones */
-@media (max-width: 480px) {
+@media (max-width: 767px) {
     #game-screen {
         height: 100vh;
         height: 100dvh;
