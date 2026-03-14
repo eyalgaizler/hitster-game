@@ -90,6 +90,17 @@ const app = {
         document.getElementById('cards-to-win-value').textContent = this.cardsToWin;
     },
 
+    // === SPOTIFY LOGIN ===
+    openSpotifyLogin() {
+        window.open('https://accounts.spotify.com/login', '_blank', 'width=500,height=700');
+        // Update text to remind user
+        const text = document.getElementById('spotify-login-text');
+        text.textContent = 'התחברתם? השירים ינוגנו במלואם!';
+        const btn = document.getElementById('spotify-login-btn');
+        btn.textContent = '✓ מחובר';
+        btn.classList.add('btn-spotify-connected');
+    },
+
     // === GAME START ===
     startGame() {
         if (this.players.length < 2) return;

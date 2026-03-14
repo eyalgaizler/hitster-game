@@ -97,6 +97,54 @@ body {
     min-width: 40px;
     text-align: center;
 }
+
+/* Spotify Login Section */
+.spotify-login-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0 8px;
+    padding: 12px 20px;
+    background: rgba(30, 215, 96, 0.08);
+    border: 1px solid rgba(30, 215, 96, 0.25);
+    border-radius: var(--radius);
+}
+.spotify-login-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.spotify-logo {
+    font-size: 1.4rem;
+}
+.spotify-login-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+.btn-spotify-login {
+    background: #1DB954;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+.btn-spotify-login:hover {
+    background: #1ed760;
+}
+.btn-spotify-connected {
+    background: rgba(30, 215, 96, 0.2);
+    color: #1DB954;
+    cursor: default;
+}
+.btn-spotify-connected:hover {
+    background: rgba(30, 215, 96, 0.2);
+}
 .btn-small {
     background: var(--bg-secondary);
     color: var(--text-primary);

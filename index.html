@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
     <!-- Setup Screen -->
@@ -32,6 +32,14 @@
                     <span id="cards-to-win-value" class="cards-to-win-value">5</span>
                     <button class="btn btn-small" onclick="app.adjustCardsToWin(1)">+</button>
                 </div>
+            </div>
+
+            <div class="spotify-login-section">
+                <div class="spotify-login-info">
+                    <span class="spotify-logo">🎧</span>
+                    <span class="spotify-login-text" id="spotify-login-text">התחברו ל-Spotify לשירים מלאים (אופציונלי)</span>
+                </div>
+                <button class="btn btn-spotify-login" id="spotify-login-btn" onclick="app.openSpotifyLogin()">התחבר ל-Spotify</button>
             </div>
 
             <button id="start-game-btn" class="btn btn-start" disabled>🎶 התחילו לשחק!</button>
