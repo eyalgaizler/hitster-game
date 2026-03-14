@@ -10,8 +10,9 @@ const app = {
     round: 1,
     tokenEarnedThisTurn: false,
     gamePhase: 'setup', // setup | playing | finished
-    ytPlayer: null,
-    ytReady: false,
+    spotifyController: null,
+    spotifyReady: false,
+    spotifyIFrameAPI: null,
     cardsToWin: 5,
 
     // === SETUP ===
@@ -128,7 +129,7 @@ const app = {
         // Update UI
         this.updateTopBar();
         this.updateScoreboard();
-        this.loadSong(this.currentCard.youtubeId);
+        this.loadSong(this.currentCard.spotifyId);
         this.showOverlay();
         this.renderTimeline();
         this.updateTokenButtons();
@@ -155,62 +156,47 @@ const app = {
         `).join('');
     },
 
-    // === YOUTUBE PLAYER ===
-    initYouTubePlayer(videoId) {
-        const container = document.getElementById('youtube-container');
+    // === SPOTIFY EMBED PLAYER ===
+    initSpotifyEmbed(spotifyId) {
+        const element = document.getElementById('spotify-embed');
 
-        if (this.ytPlayer) {
-            this.ytPlayer.loadVideoById(videoId);
-            return;
-        }
-
-        const createPlayer = () => {
-            this.ytPlayer = new YT.Player('youtube-player', {
-                height: '200',
+        const createController = (IFrameAPI) => {
+            element.innerHTML = '';
+            const options = {
+                uri: `spotify:track:${spotifyId}`,
                 width: '100%',
-                videoId: videoId,
-                playerVars: {
-                    autoplay: 0,
-                    controls: 1,
-                    modestbranding: 1,
-                    rel: 0,
-                    showinfo: 0,
-                    fs: 0,
-                    playsinline: 1,
-                },
-                events: {
-                    onReady: () => {
-                        this.ytReady = true;
-                        console.log('YouTube player ready');
-                    },
-                    onError: (e) => {
-                        console.error('YouTube player error:', e.data);
-                    }
-                }
+                height: 80,
+            };
+            IFrameAPI.createController(element, options, (controller) => {
+                this.spotifyController = controller;
+                this.spotifyReady = true;
+                console.log('Spotify embed ready');
             });
         };
 
-        if (window.YT && window.YT.Player) {
-            createPlayer();
+        if (this.spotifyIFrameAPI) {
+            createController(this.spotifyIFrameAPI);
         } else {
-            window.onYouTubeIframeAPIReady = createPlayer;
+            window.onSpotifyIframeApiReady = (IFrameAPI) => {
+                this.spotifyIFrameAPI = IFrameAPI;
+                createController(IFrameAPI);
+            };
         }
     },
 
-    loadSong(youtubeId) {
-        if (this.ytPlayer && this.ytReady) {
-            this.ytPlayer.loadVideoById(youtubeId);
-            this.ytPlayer.pauseVideo();
+    loadSong(spotifyId) {
+        if (this.spotifyController && this.spotifyReady) {
+            this.spotifyController.loadUri(`spotify:track:${spotifyId}`);
         } else {
-            this.initYouTubePlayer(youtubeId);
+            this.initSpotifyEmbed(spotifyId);
         }
     },
 
     playFromOverlay() {
-        if (this.ytPlayer && this.ytReady) {
-            this.ytPlayer.playVideo();
+        if (this.spotifyController && this.spotifyReady) {
+            this.spotifyController.play();
         } else {
-            console.log('YouTube not ready, retrying in 500ms...');
+            console.log('Spotify not ready, retrying in 500ms...');
             setTimeout(() => this.playFromOverlay(), 500);
         }
     },
@@ -226,7 +212,7 @@ const app = {
         const overlay = document.getElementById('player-overlay');
         const songInfo = document.getElementById('song-info');
 
-        // Hide the overlay to reveal the YouTube player
+        // Hide the overlay to reveal the Spotify player
         overlay.classList.add('hidden');
 
         // Show song info
@@ -282,7 +268,7 @@ const app = {
     createCardHtml(card) {
         const imgUrl = card.imageUrl || '';
         const imgStyle = imgUrl ? `background-image: url('${imgUrl}')` : '';
-        return `<div class="timeline-card flip-card" data-song-id="${card.youtubeId}">
+        return `<div class="timeline-card flip-card" data-song-id="${card.spotifyId}">
             <div class="flip-card-inner">
                 <div class="flip-card-front">
                     <div class="card-inner">
@@ -375,14 +361,14 @@ const app = {
         this.updateScoreboard();
 
         // Flip animation then draw new card
-        this.triggerAnim('youtube-container', 'anim-skip');
+        this.triggerAnim('spotify-container', 'anim-skip');
         setTimeout(() => {
             if (this.deck.length === 0) {
                 this.endGameNoCards();
                 return;
             }
             this.currentCard = this.deck.pop();
-            this.loadSong(this.currentCard.youtubeId);
+            this.loadSong(this.currentCard.spotifyId);
             this.showOverlay();
             this.selectedSlot = null;
             this.renderTimeline();

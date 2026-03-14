@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
     <!-- Setup Screen -->
@@ -57,10 +57,10 @@
 
             <!-- Center: Game Play Area -->
             <div class="play-area">
-                <!-- YouTube Player with Overlay -->
+                <!-- Spotify Player with Overlay -->
                 <div class="player-section">
-                    <div class="player-wrapper" id="youtube-container">
-                        <div id="youtube-player"></div>
+                    <div class="player-wrapper" id="spotify-container">
+                        <div id="spotify-embed"></div>
                         <div class="player-overlay" id="player-overlay">
                             <button class="btn btn-play-overlay" onclick="app.playFromOverlay()">▶ נגן שיר</button>
                         </div>
@@ -114,7 +114,7 @@
         </div>
     </div>
 
-    <script src="https://www.youtube.com/iframe_api" async></script>
+    <script src="https://open.spotify.com/embed/iframe-api/v1"></script>
     <script src="songs.js"></script>
     <script src="app.js"></script>
 </body>

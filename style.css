@@ -390,7 +390,12 @@ body {
     border-radius: var(--radius);
     overflow: hidden;
     background: #282828;
-    min-height: 120px;
+    min-height: 80px;
+}
+
+#spotify-embed iframe {
+    display: block;
+    border: none;
 }
 
 .player-overlay {
