@@ -34,7 +34,6 @@
                 </div>
             </div>
 
-            <button id="spotify-connect-btn" class="btn btn-spotify" onclick="app.connectSpotify()">🎵 התחבר ל-Spotify (שירים מלאים)</button>
             <button id="start-game-btn" class="btn btn-start" disabled>🎶 התחילו לשחק!</button>
         </div>
     </div>
@@ -58,11 +57,11 @@
 
             <!-- Center: Game Play Area -->
             <div class="play-area">
-                <!-- Spotify Player with Overlay -->
-                <div class="spotify-section">
-                    <div class="spotify-wrapper" id="spotify-wrapper">
-                        <div id="spotify-embed"></div>
-                        <div class="spotify-overlay" id="spotify-overlay">
+                <!-- YouTube Player with Overlay -->
+                <div class="player-section">
+                    <div class="player-wrapper" id="youtube-container">
+                        <div id="youtube-player"></div>
+                        <div class="player-overlay" id="player-overlay">
                             <button class="btn btn-play-overlay" onclick="app.playFromOverlay()">▶ נגן שיר</button>
                         </div>
                     </div>
@@ -115,7 +114,7 @@
         </div>
     </div>
 
-    <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+    <script src="https://www.youtube.com/iframe_api" async></script>
     <script src="songs.js"></script>
     <script src="app.js"></script>
 </body>

@@ -1,9 +1,5 @@
 // === Hitster Game Logic ===
 
-const SPOTIFY_CLIENT_ID = 'afc1f2a521c341bcb86aff6435a3d5ad';
-const SPOTIFY_REDIRECT_URI = window.location.origin + window.location.pathname.replace(/[^/]*$/, '') + 'callback.html';
-const SPOTIFY_SCOPES = 'streaming user-read-email user-read-private user-modify-playback-state';
-
 const app = {
     // Game state
     players: [],
@@ -14,21 +10,13 @@ const app = {
     round: 1,
     tokenEarnedThisTurn: false,
     gamePhase: 'setup', // setup | playing | finished
-    spotifyController: null,
-    spotifyReady: false,
-    pendingSongUri: null,
+    ytPlayer: null,
+    ytReady: false,
     cardsToWin: 5,
-    coverArtCache: {},
-    // Web Playback SDK
-    spotifyPlayer: null,
-    spotifyDeviceId: null,
-    spotifyToken: null,
-    useWebPlayback: false,
 
     // === SETUP ===
     init() {
         this.bindSetupEvents();
-        this.checkSpotifyAuth();
     },
 
     bindSetupEvents() {
@@ -41,151 +29,6 @@ const app = {
             if (e.key === 'Enter') this.addPlayer();
         });
         startBtn.addEventListener('click', () => this.startGame());
-    },
-
-    // === SPOTIFY AUTH (PKCE) ===
-    checkSpotifyAuth() {
-        const token = localStorage.getItem('spotify_access_token');
-        const expires = localStorage.getItem('spotify_token_expires');
-        const error = localStorage.getItem('spotify_auth_error');
-
-        if (error) {
-            localStorage.removeItem('spotify_auth_error');
-            console.warn('Spotify auth error:', error);
-        }
-
-        if (token && expires && Date.now() < parseInt(expires)) {
-            this.spotifyToken = token;
-            this.useWebPlayback = true;
-            this.updateSpotifyButton(true);
-            this.initWebPlaybackSDK();
-        } else {
-            localStorage.removeItem('spotify_access_token');
-            localStorage.removeItem('spotify_token_expires');
-            this.updateSpotifyButton(false);
-        }
-    },
-
-    updateSpotifyButton(connected) {
-        const btn = document.getElementById('spotify-connect-btn');
-        if (!btn) return;
-        if (connected) {
-            btn.textContent = '🟢 Spotify מחובר - שירים מלאים!';
-            btn.classList.add('connected');
-            btn.onclick = null;
-        } else {
-            btn.textContent = '🎵 התחבר ל-Spotify (שירים מלאים)';
-            btn.classList.remove('connected');
-            btn.onclick = () => this.connectSpotify();
-        }
-    },
-
-    async connectSpotify() {
-        // Generate PKCE code verifier and challenge
-        const verifier = this.generateCodeVerifier();
-        localStorage.setItem('spotify_code_verifier', verifier);
-        const challenge = await this.generateCodeChallenge(verifier);
-
-        const params = new URLSearchParams({
-            client_id: SPOTIFY_CLIENT_ID,
-            response_type: 'code',
-            redirect_uri: SPOTIFY_REDIRECT_URI,
-            scope: SPOTIFY_SCOPES,
-            code_challenge_method: 'S256',
-            code_challenge: challenge
-        });
-
-        window.location.href = 'https://accounts.spotify.com/authorize?' + params.toString();
-    },
-
-    generateCodeVerifier() {
-        const arr = new Uint8Array(64);
-        crypto.getRandomValues(arr);
-        return btoa(String.fromCharCode(...arr))
-            .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-    },
-
-    async generateCodeChallenge(verifier) {
-        const data = new TextEncoder().encode(verifier);
-        const digest = await crypto.subtle.digest('SHA-256', data);
-        return btoa(String.fromCharCode(...new Uint8Array(digest)))
-            .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-    },
-
-    initWebPlaybackSDK() {
-        if (!this.spotifyToken) return;
-
-        window.onSpotifyWebPlaybackSDKReady = () => {
-            const player = new Spotify.Player({
-                name: 'Hitster Game',
-                getOAuthToken: cb => cb(this.spotifyToken),
-                volume: 0.8
-            });
-
-            player.addListener('ready', ({ device_id }) => {
-                console.log('Web Playback SDK ready, device:', device_id);
-                this.spotifyDeviceId = device_id;
-                this.spotifyPlayer = player;
-                // Transfer playback to this device
-                fetch('https://api.spotify.com/v1/me/player', {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': 'Bearer ' + this.spotifyToken,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ device_ids: [device_id], play: false })
-                });
-            });
-
-            player.addListener('not_ready', ({ device_id }) => {
-                console.log('Device has gone offline:', device_id);
-                this.spotifyDeviceId = null;
-            });
-
-            player.addListener('authentication_error', ({ message }) => {
-                console.error('Spotify auth error:', message);
-                this.useWebPlayback = false;
-                this.spotifyToken = null;
-                localStorage.removeItem('spotify_access_token');
-                this.updateSpotifyButton(false);
-            });
-
-            player.connect();
-        };
-
-        // Load the SDK script if not already loaded
-        if (!document.getElementById('spotify-web-playback-sdk')) {
-            const script = document.createElement('script');
-            script.id = 'spotify-web-playback-sdk';
-            script.src = 'https://sdk.scdn.co/spotify-player.js';
-            document.body.appendChild(script);
-        } else if (window.Spotify) {
-            window.onSpotifyWebPlaybackSDKReady();
-        }
-    },
-
-    async playTrackWebSDK(spotifyId) {
-        if (!this.spotifyDeviceId || !this.spotifyToken) return false;
-
-        try {
-            const res = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${this.spotifyDeviceId}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': 'Bearer ' + this.spotifyToken,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ uris: [`spotify:track:${spotifyId}`] })
-            });
-            return res.ok || res.status === 204;
-        } catch (e) {
-            console.error('Web Playback error:', e);
-            return false;
-        }
-    },
-
-    async pauseWebSDK() {
-        if (!this.spotifyPlayer) return;
-        this.spotifyPlayer.pause();
     },
 
     addPlayer() {
@@ -285,7 +128,7 @@ const app = {
         // Update UI
         this.updateTopBar();
         this.updateScoreboard();
-        this.loadSong(this.currentCard.spotifyId);
+        this.loadSong(this.currentCard.youtubeId);
         this.showOverlay();
         this.renderTimeline();
         this.updateTokenButtons();
@@ -312,109 +155,78 @@ const app = {
         `).join('');
     },
 
-    // === SPOTIFY PLAYER ===
-    initSpotifyEmbed(uri) {
-        const wrapper = document.getElementById('spotify-wrapper');
-        // Remove old iframe if present
-        const oldIframe = wrapper.querySelector('iframe');
-        if (oldIframe) oldIframe.remove();
-        // Remove old embed div if present
-        const oldEmbed = document.getElementById('spotify-embed');
-        if (oldEmbed) oldEmbed.remove();
+    // === YOUTUBE PLAYER ===
+    initYouTubePlayer(videoId) {
+        const container = document.getElementById('youtube-container');
 
-        // Create fresh container for the API
-        const element = document.createElement('div');
-        element.id = 'spotify-embed';
-        wrapper.insertBefore(element, wrapper.firstChild);
+        if (this.ytPlayer) {
+            this.ytPlayer.loadVideoById(videoId);
+            return;
+        }
 
-        this.spotifyReady = false;
-        this.spotifyController = null;
-
-        const createController = (IFrameAPI) => {
-            const options = {
-                uri: uri,
+        const createPlayer = () => {
+            this.ytPlayer = new YT.Player('youtube-player', {
+                height: '200',
                 width: '100%',
-                height: 80,
-                theme: 0,
-            };
-            IFrameAPI.createController(element, options, (controller) => {
-                this.spotifyController = controller;
-                controller.addListener('ready', () => {
-                    this.spotifyReady = true;
-                    console.log('Spotify controller ready');
-                });
+                videoId: videoId,
+                playerVars: {
+                    autoplay: 0,
+                    controls: 1,
+                    modestbranding: 1,
+                    rel: 0,
+                    showinfo: 0,
+                    fs: 0,
+                    playsinline: 1,
+                },
+                events: {
+                    onReady: () => {
+                        this.ytReady = true;
+                        console.log('YouTube player ready');
+                    },
+                    onError: (e) => {
+                        console.error('YouTube player error:', e.data);
+                    }
+                }
             });
         };
 
-        if (window.SpotifyIframeApi) {
-            createController(window.SpotifyIframeApi);
+        if (window.YT && window.YT.Player) {
+            createPlayer();
         } else {
-            window.onSpotifyIframeApiReady = (IFrameAPI) => {
-                window.SpotifyIframeApi = IFrameAPI;
-                createController(IFrameAPI);
-            };
+            window.onYouTubeIframeAPIReady = createPlayer;
         }
     },
 
-    fetchCoverArt(spotifyId) {
-        fetch(`https://open.spotify.com/oembed?url=https://open.spotify.com/track/${spotifyId}`)
-            .then(r => r.json())
-            .then(data => {
-                if (data.thumbnail_url) {
-                    this.coverArtCache[spotifyId] = data.thumbnail_url;
-                    // Update any visible card with this spotifyId
-                    document.querySelectorAll(`.flip-card[data-spotify-id="${spotifyId}"] .flip-card-back`).forEach(el => {
-                        el.style.backgroundImage = `url('${data.thumbnail_url}')`;
-                    });
-                }
-            })
-            .catch(() => {});
-    },
-
-    loadSong(spotifyId) {
-        this.pendingSongId = spotifyId;
-        const uri = `spotify:track:${spotifyId}`;
-
-        if (this.useWebPlayback && this.spotifyDeviceId) {
-            // Web Playback SDK - don't auto-play, wait for user to click play
-            return;
-        }
-
-        // Fallback: iFrame embed
-        if (this.spotifyController) {
-            this.spotifyController.loadUri(uri);
-            return;
-        }
-        this.initSpotifyEmbed(uri);
-    },
-
-    async playFromOverlay() {
-        if (this.useWebPlayback && this.spotifyDeviceId && this.pendingSongId) {
-            const ok = await this.playTrackWebSDK(this.pendingSongId);
-            if (ok) return;
-            // Fall through to iframe if Web SDK fails
-        }
-
-        if (this.spotifyController) {
-            this.spotifyController.togglePlay();
+    loadSong(youtubeId) {
+        if (this.ytPlayer && this.ytReady) {
+            this.ytPlayer.loadVideoById(youtubeId);
+            this.ytPlayer.pauseVideo();
         } else {
-            console.log('Spotify not ready, retrying in 500ms...');
+            this.initYouTubePlayer(youtubeId);
+        }
+    },
+
+    playFromOverlay() {
+        if (this.ytPlayer && this.ytReady) {
+            this.ytPlayer.playVideo();
+        } else {
+            console.log('YouTube not ready, retrying in 500ms...');
             setTimeout(() => this.playFromOverlay(), 500);
         }
     },
 
     showOverlay() {
-        const overlay = document.getElementById('spotify-overlay');
+        const overlay = document.getElementById('player-overlay');
         overlay.classList.remove('hidden');
         const songInfo = document.getElementById('song-info');
         songInfo.classList.add('hidden');
     },
 
     toggleOverlay() {
-        const overlay = document.getElementById('spotify-overlay');
+        const overlay = document.getElementById('player-overlay');
         const songInfo = document.getElementById('song-info');
 
-        // Hide the overlay to reveal the Spotify player
+        // Hide the overlay to reveal the YouTube player
         overlay.classList.add('hidden');
 
         // Show song info
@@ -468,13 +280,9 @@ const app = {
     },
 
     createCardHtml(card) {
-        const imgUrl = card.imageUrl || this.coverArtCache[card.spotifyId] || '';
+        const imgUrl = card.imageUrl || '';
         const imgStyle = imgUrl ? `background-image: url('${imgUrl}')` : '';
-        // Fetch cover art only if not in song data or cache
-        if (!imgUrl) {
-            this.fetchCoverArt(card.spotifyId);
-        }
-        return `<div class="timeline-card flip-card" data-spotify-id="${card.spotifyId}">
+        return `<div class="timeline-card flip-card" data-song-id="${card.youtubeId}">
             <div class="flip-card-inner">
                 <div class="flip-card-front">
                     <div class="card-inner">
@@ -567,14 +375,14 @@ const app = {
         this.updateScoreboard();
 
         // Flip animation then draw new card
-        this.triggerAnim('spotify-wrapper', 'anim-skip');
+        this.triggerAnim('youtube-container', 'anim-skip');
         setTimeout(() => {
             if (this.deck.length === 0) {
                 this.endGameNoCards();
                 return;
             }
             this.currentCard = this.deck.pop();
-            this.loadSong(this.currentCard.spotifyId);
+            this.loadSong(this.currentCard.youtubeId);
             this.showOverlay();
             this.selectedSlot = null;
             this.renderTimeline();
